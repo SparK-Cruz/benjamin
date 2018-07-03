@@ -14,12 +14,15 @@ use Ebanx\Benjamin\Services\Http\Client;
 
 class CreditCard extends DirectGateway
 {
+    const API_TYPE = 'creditcard';
+
     protected static function getEnabledCountries()
     {
         return [
             Country::BRAZIL,
             Country::MEXICO,
             Country::COLOMBIA,
+            Country::ARGENTINA,
         ];
     }
     protected static function getEnabledCurrencies()
@@ -28,6 +31,7 @@ class CreditCard extends DirectGateway
             Currency::BRL,
             Currency::MXN,
             Currency::COP,
+            Currency::ARS,
             Currency::USD,
             Currency::EUR,
         ];

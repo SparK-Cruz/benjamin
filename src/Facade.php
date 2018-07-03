@@ -5,6 +5,7 @@ use Ebanx\Benjamin\Models\Configs\Config;
 use Ebanx\Benjamin\Models\Configs\CreditCardConfig;
 use Ebanx\Benjamin\Models\Configs\AddableConfig;
 use Ebanx\Benjamin\Models\Payment;
+use Ebanx\Benjamin\Services\CancelPayment;
 use Ebanx\Benjamin\Services\Gateways;
 use Ebanx\Benjamin\Services\PaymentInfo;
 use Ebanx\Benjamin\Services\Exchange;
@@ -75,12 +76,69 @@ class Facade
         if ($payment->type === null) {
             throw new \InvalidArgumentException('Invalid payment type');
         }
+
         if (!method_exists($this, $payment->type)) {
             throw new \InvalidArgumentException('Invalid payment type');
         }
 
         $instance = call_user_func([$this, $payment->type]);
         return $instance->create($payment);
+    }
+
+    /**
+     * @param string $hash
+     * @return string
+     */
+    public function getTicketHtml($hash)
+    {
+        $info = $this->paymentInfo()->findByHash($hash);
+
+        $gatewayName = $this->getGatewayNameFromType($info['payment']['payment_type_code']);
+        if (!$gatewayName) {
+            return null;
+        }
+
+        $gateway = $this->{$gatewayName}();
+        if (!method_exists($gateway, 'getTicketHtml')) {
+            return null;
+        }
+
+        return $gateway->getTicketHtml($hash);
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function isValidPrivateKey($key)
+    {
+        $data = ['integration_key' => $key];
+        $response = $this->getHttpClient()->validatePrivateKey($data);
+
+        return $response['status'] === 'SUCCESS';
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    public function isValidPublicKey($key)
+    {
+        $data = ['public_integration_key' => $key];
+        try {
+            $response = $this->getHttpClient()->validatePublicKey($data);
+
+            return $response['status'] === 'SUCCESS';
+        } catch (\Exception $e) {
+            if ($e->getCode() === 409) {
+                return false;
+            }
+
+            throw $e;
+        }
     }
 
     # Gateways
@@ -274,6 +332,14 @@ class Facade
         return new Refund($this->config, $this->getHttpClient());
     }
 
+    /**
+     * @return CancelPayment
+     */
+    public function cancelPayment()
+    {
+        return new CancelPayment($this->config, $this->getHttpClient());
+    }
+
     protected function getHttpClient()
     {
         if (is_null($this->httpClient)) {
@@ -281,5 +347,43 @@ class Facade
             $this->httpClient->switchMode($this->config->isSandbox);
         }
         return $this->httpClient;
+    }
+
+    protected function getGatewayNameFromType($apiType)
+    {
+        foreach ($this->getAllPublicServices() as $method => $service) {
+            $class = get_class($service);
+
+            if (!defined($class.'::API_TYPE')) {
+                continue;
+            }
+
+            if ($class::API_TYPE !== $apiType) {
+                continue;
+            }
+
+            return $method;
+        }
+
+        return null;
+    }
+
+    protected function getAllPublicServices()
+    {
+        $methods = get_class_methods(get_class($this));
+        $services = [];
+
+        foreach ($methods as $method) {
+            $reflection = new \ReflectionMethod($this, $method);
+
+            if (!$reflection->isPublic()
+                || $reflection->getNumberOfRequiredParameters() > 0) {
+                continue;
+            }
+
+            $services[$method] = $this->{$method}();
+        }
+
+        return $services;
     }
 }

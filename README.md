@@ -1,10 +1,9 @@
 # Benjamin
-[![Build Status](https://travis-ci.org/ebanx/benjamin.svg?branch=master)](https://travis-ci.org/ebanx/benjamin)
-[![codecov](https://codecov.io/gh/ebanx/benjamin/branch/master/graph/badge.svg)](https://codecov.io/gh/ebanx/benjamin)
-[![Latest Stable Version](https://poser.pugx.org/ebanx/benjamin/v/stable?format=flat-square)](https://packagist.org/packages/ebanx/benjamin)
-[![Total Downloads](https://poser.pugx.org/ebanx/benjamin/downloads?format=flat-square)](https://packagist.org/packages/ebanx/benjamin)
-[![Latest Unstable Version](https://poser.pugx.org/ebanx/benjamin/v/unstable?format=flat-square)](https://packagist.org/packages/ebanx/benjamin)
-[![License](https://poser.pugx.org/ebanx/benjamin/license?format=flat-square)](https://packagist.org/packages/ebanx/benjamin)
+[![Build Status](https://img.shields.io/travis/ebanx/benjamin/master.svg?style=for-the-badge)](https://travis-ci.org/ebanx/benjamin)
+[![codecov](https://img.shields.io/codecov/c/github/ebanx/benjamin/master.svg?style=for-the-badge)](https://codecov.io/gh/ebanx/benjamin)
+[![Latest Stable Version](https://img.shields.io/packagist/v/ebanx/benjamin.svg?style=for-the-badge)](https://packagist.org/packages/ebanx/benjamin)
+[![Total Downloads](https://img.shields.io/packagist/dt/ebanx/benjamin.svg?style=for-the-badge)](https://packagist.org/packages/ebanx/benjamin)
+[![License](https://img.shields.io/packagist/l/ebanx/benjamin.svg?style=for-the-badge)](https://packagist.org/packages/ebanx/benjamin)
 
 
 This is the repository for business rules as of implemented by merchant sites for use in e-commerce platform plugins.
@@ -33,48 +32,6 @@ If you want more information you can check the [Wiki](https://github.com/ebanx/b
 ## Contributing
 
 Check the [Wiki](https://github.com/ebanx/benjamin/wiki/Contributing).
-
-## Checklist for implementations needed
-
-- [X] Payment
-	- [X] Brasil
-		- [X] :dollar: Boleto
-		- [X] :credit_card: Credit Card
-		- [X] :arrows_clockwise: TEF
-		- [X] :arrows_clockwise: EBANX Account
-	- [X] Mexico
-		- [X] :credit_card: Credit Card
-		- [X] :credit_card: Debit Card
-		- [X] :dollar: OXXO
-		- [X] :arrows_clockwise: Spei
-	- [X] Chile
-		- [X] :dollar: Sencillito
-		- [X] :arrows_clockwise: Servipag
-		- [X] :arrows_clockwise: Webpay
-		- [X] :arrows_clockwise: Multicaja
-	- [X] Colombia
-		- [X] :arrows_clockwise: PSE
-		- [X] :dollar: Baloto
-		- [X] :credit_card: Credit Card
-	- [X] Peru
-		- [X] :arrows_clockwise: SafetyPay
-		- [X] :dollar: SafetyPay
-		- [X] :dollar: PagoEfectivo
-	- [X] Argentina
-		- [X] :dollar: Rapipago
-		- [X] :dollar: PagoFacil
-		- [X] :dollar: Otros Cupones
-- [X] Refund
-- [X] Payment Capture
-- [X] Payment by link (Hosted page gateway)
-- [ ] Validator
-- [ ] Response Decorators
-- [X] Interest Rates
-- [X] Taxes
-
-:dollar: = Cash payment  
-:credit_card: = Card payment  
-:arrows_clockwise: = Online payment  
 
 ## License
 

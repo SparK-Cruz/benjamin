@@ -1,6 +1,7 @@
 <?php
 namespace Ebanx\Benjamin\Services\Adapters;
 
+use Ebanx\Benjamin\Models\Country;
 use Ebanx\Benjamin\Models\Address;
 use Ebanx\Benjamin\Models\Person;
 use Ebanx\Benjamin\Models\SubAccount;
@@ -35,6 +36,7 @@ class RequestAdapter extends BaseAdapter
             'bypass_boleto_screen' => $this->request->skipThankyouPage,
             'due_date' => $this->transformDate($this->request->dueDate),
             'notification_url' => $this->getNotificationUrl(),
+            'redirect_url' => $this->request->redirectUrl,
             'instalments' => implode('-', [
                 $this->request->minInstalments,
                 $this->request->maxInstalments,
@@ -58,33 +60,25 @@ class RequestAdapter extends BaseAdapter
 
     protected function transformPerson(Person $person = null)
     {
-        if (!$person) {
-            return [];
-        }
-
         return [
-            'person_type' => $person->type,
             'name' => $person->name,
-            'birth_date' => $person->birthdate,
             'email' => $person->email,
             'phone_number' => $person->phoneNumber,
+            'person_type' => $person->type,
+            'birth_date' => $person->birthdate,
         ];
     }
 
     protected function transformAddress(Address $address = null)
     {
-        if (!$address) {
-            return [];
-        }
-
         return [
+            'country' => Country::toIso($address->country),
             'zipcode' => $address->zipcode,
             'address' => $address->address,
             'street_number' => $address->streetNumber,
             'street_complement' => $address->streetComplement,
             'city' => $address->city,
             'state' => $address->state,
-            'country' => $this->countryCode[$address->country],
         ];
     }
 

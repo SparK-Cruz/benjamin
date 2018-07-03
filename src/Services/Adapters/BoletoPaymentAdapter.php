@@ -3,10 +3,9 @@ namespace Ebanx\Benjamin\Services\Adapters;
 
 class BoletoPaymentAdapter extends BrazilPaymentAdapter
 {
-    public function transform()
+    public function transformPayment()
     {
-        $transformed = parent::transform();
-        $transformed->bypass_boleto_screen = true;
+        $transformed = parent::transformPayment();
 
         if (isset($this->payment->dueDate)) {
             $transformed->due_date = $this->payment->dueDate->format('d/m/Y');

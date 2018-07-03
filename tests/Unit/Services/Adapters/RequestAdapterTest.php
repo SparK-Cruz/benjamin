@@ -14,22 +14,23 @@ class RequestAdapterTest extends PaymentAdapterTest
 {
     public function testJsonSchema()
     {
-        $config = new Config([
-            'sandboxIntegrationKey' => 'testIntegrationKey'
-        ]);
-
         $factory = new BuilderFactory('pt_BR');
         $request = $factory
             ->request()
             ->build();
 
-        $adapter = new FakeRequestAdapter($request, $config);
-        $result = $adapter->transform();
+        $this->assertModelJsonSchemaCompliance($request);
+    }
 
-        $validator = new JsonSchema\Validator();
-        $validator->validate($result, $this->getSchema('requestSchema'));
+    public function testJsonSchemaWithSubAccount()
+    {
+        $factory = new BuilderFactory('pt_BR');
+        $request = $factory
+            ->request()
+            ->withSubAccount()
+            ->build();
 
-        $this->assertTrue($validator->isValid(), $this->getJsonMessage($validator));
+        $this->assertModelJsonSchemaCompliance($request);
     }
 
     public function testTransformNotificationUrl()
@@ -57,6 +58,24 @@ class RequestAdapterTest extends PaymentAdapterTest
             $expected,
             $result2->notification_url,
             'Request adapter failed to inject a notification url'
+        );
+    }
+
+    public function testTransformRedirectUrl()
+    {
+        $expected = 'SAMPLE_URL';
+
+        $factory = new BuilderFactory('pt_BR');
+        $request = $factory->request()->build();
+        $request->redirectUrl = $expected;
+
+        $adapter = new FakeRequestAdapter($request, new Config());
+        $result = $adapter->transform();
+
+        $this->assertEquals(
+            $expected,
+            $result->redirect_url,
+            'Request adapter failed to send redirect_url'
         );
     }
 
@@ -134,6 +153,21 @@ class RequestAdapterTest extends PaymentAdapterTest
         $result = $adapter->transform();
 
         $this->assertEquals($expected, $result->address);
+    }
+
+    private function assertModelJsonSchemaCompliance($model)
+    {
+        $config = new Config([
+            'sandboxIntegrationKey' => 'testIntegrationKey'
+        ]);
+
+        $adapter = new FakeRequestAdapter($model, $config);
+        $result = $adapter->transform();
+
+        $validator = new JsonSchema\Validator();
+        $validator->validate($result, $this->getSchema('requestSchema'));
+
+        $this->assertTrue($validator->isValid(), $this->getJsonMessage($validator));
     }
 }
 

@@ -5,8 +5,8 @@ use GuzzleHttp;
 
 class Client
 {
-    const SANDBOX_URL = 'https://sandbox.ebanx.com/ws/';
-    const LIVE_URL = 'https://api.ebanx.com/ws/';
+    const SANDBOX_URL = 'https://sandbox.ebanx.com/';
+    const LIVE_URL = 'https://api.ebanx.com/';
 
     const MODE_SANDBOX = 0;
     const MODE_LIVE = 1;
@@ -26,12 +26,12 @@ class Client
 
     public function __construct()
     {
-        $this->engine = new GuzzleHttp\Client();
+        $this->engine = new Engine();
     }
 
     protected function html($url)
     {
-        return $this->engine->get($url)->getBody()->getContents();
+        return $this->engine->get($url)->getContents();
     }
 
     /**
@@ -43,7 +43,7 @@ class Client
     {
         return $this->engine->post(
             $this->getUrl() . $endpoint,
-            ['json' => $data]
+            $data
         )->json();
     }
 
@@ -56,7 +56,7 @@ class Client
     {
         return $this->engine->get(
             $this->getUrl() . $endpoint,
-            ['query' => $data]
+            $data
         )->json();
     }
 
@@ -66,7 +66,7 @@ class Client
      */
     public function payment($data)
     {
-        return $this->post($data, 'direct');
+        return $this->post($data, 'ws/direct');
     }
 
     /**
@@ -75,7 +75,7 @@ class Client
      */
     public function request($data)
     {
-        return $this->post($data, 'request');
+        return $this->post($data, 'ws/request');
     }
 
     /**
@@ -84,7 +84,16 @@ class Client
      */
     public function refund($data)
     {
-        return $this->query($data, 'refund');
+        return $this->query($data, 'ws/refund');
+    }
+
+    /**
+     * @param  object|array $data Payment data payload
+     * @return array
+     */
+    public function cancel($data)
+    {
+        return $this->query($data, 'ws/cancel');
     }
 
     /**
@@ -93,7 +102,7 @@ class Client
      */
     public function capture($data)
     {
-        return $this->query($data, 'capture');
+        return $this->query($data, 'ws/capture');
     }
 
     /**
@@ -102,17 +111,37 @@ class Client
      */
     public function exchange($data)
     {
-        return $this->query($data, 'exchange');
+        return $this->query($data, 'ws/exchange');
     }
 
     public function paymentInfo($data)
     {
-        return $this->query($data, 'query');
+        return $this->query($data, 'ws/query');
     }
 
     public function fetchContent($url)
     {
         return $this->html($url);
+    }
+
+    /**
+     * @param object|array $data
+     *
+     * @return array
+     */
+    public function validatePrivateKey($data)
+    {
+        return $this->query($data, 'ws/merchantIntegrationProperties/get');
+    }
+
+    /**
+     * @param object|array $data
+     *
+     * @return array
+     */
+    public function validatePublicKey($data)
+    {
+        return $this->query($data, 'ws/merchantIntegrationProperties/isValidPublicIntegrationKey');
     }
 
     /**
@@ -153,7 +182,8 @@ class Client
 
     /**
      * @param  bool $toSandbox Switch to sandbox(true) or live(false) modes
-     * @return void
+     *
+     * @return Client
      */
     public function switchMode($toSandbox)
     {

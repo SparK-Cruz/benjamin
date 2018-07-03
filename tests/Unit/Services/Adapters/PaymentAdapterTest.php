@@ -1,8 +1,11 @@
 <?php
 namespace Tests\Unit\Services\Adapters;
 
+use Ebanx\Benjamin\Models\Address;
 use Ebanx\Benjamin\Models\Configs\Config;
 use Ebanx\Benjamin\Models\Currency;
+use Ebanx\Benjamin\Models\Payment;
+use Ebanx\Benjamin\Models\Person;
 use Ebanx\Benjamin\Services\Adapters\PaymentAdapter;
 use Tests\Helpers\Builders\BuilderFactory;
 use Tests\TestCase;
@@ -113,6 +116,76 @@ class PaymentAdapterTest extends TestCase
         $result = $adapter->transform();
 
         $this->assertEquals(Currency::EUR, $result->payment->currency_code);
+    }
+
+    public function testTransformDocument()
+    {
+        $document = '123456789';
+        $adapter = new FakeAdapter(new Payment([
+            'person' => new Person(['document' => $document]),
+            'address' => new Address()
+        ]), new Config());
+        $result = $adapter->transform();
+
+        $this->assertEquals($document, $result->payment->document);
+    }
+
+    public function testTransformWithoutDocument()
+    {
+        $adapter = new FakeAdapter(new Payment([
+            'person' => new Person(),
+            'address' => new Address()
+        ]), new Config());
+        $result = $adapter->transform();
+
+        $this->assertObjectHasAttribute('document', $result->payment);
+    }
+
+    public function testTransformDocumentType()
+    {
+        $documentType = Person::DOCUMENT_TYPE_ARGENTINA_CDI;
+        $adapter = new FakeAdapter(new Payment([
+            'person' => new Person(['documentType' => $documentType]),
+            'address' => new Address()
+        ]), new Config());
+        $result = $adapter->transform();
+
+        $this->assertEquals($documentType, $result->payment->document_type);
+    }
+
+    public function testTransformWithoutDocumentType()
+    {
+        $adapter = new FakeAdapter(new Payment([
+            'person' => new Person(),
+            'address' => new Address()
+        ]), new Config());
+        $result = $adapter->transform();
+
+        $this->assertObjectHasAttribute('document_type', $result->payment);
+    }
+
+    public function testTransformProfileId()
+    {
+        $riskProfileId = 'Bx1x0x0';
+        $adapter = new FakeAdapter(new Payment([
+            'person' => new Person(),
+            'address' => new Address(),
+            'riskProfileId' => $riskProfileId,
+        ]), new Config());
+        $result = $adapter->transform();
+
+        $this->assertEquals($riskProfileId, $result->metadata->risk->profile_id);
+    }
+
+    public function testTransformWithoutProfileId()
+    {
+        $adapter = new FakeAdapter(new Payment([
+            'person' => new Person(),
+            'address' => new Address(),
+        ]), new Config());
+        $result = $adapter->transform();
+
+        $this->assertObjectHasAttribute('profile_id', $result->metadata->risk);
     }
 
     protected function getJsonMessage(JsonSchema\Validator $validator)

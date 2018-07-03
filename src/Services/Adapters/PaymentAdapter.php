@@ -24,13 +24,8 @@ class PaymentAdapter extends BaseAdapter
             'integration_key' => $this->getIntegrationKey(),
             'operation' => 'request',
             'mode' => 'full',
+            'metadata' => $this->transformMetadata(),
             'payment' => $this->transformPayment(),
-            'currency_code' => $this->config->baseCurrency,
-            'name' => $this->payment->person->name,
-            'email' => $this->payment->person->email,
-            'amount' => $this->payment->amountTotal,
-            'merchant_payment_code' => $this->payment->merchantPaymentCode,
-            'payment_type_code' => $this->payment->type,
         ];
     }
 
@@ -51,13 +46,15 @@ class PaymentAdapter extends BaseAdapter
             'merchant_payment_code' => $this->payment->merchantPaymentCode,
             'order_number' => $this->payment->orderNumber,
             'customer_ip' => $this->payment->person->ip,
+            'document' => $this->payment->person->document,
+            'document_type' => $this->payment->person->documentType,
             'zipcode' => $this->payment->address->zipcode,
             'address' => $this->payment->address->address,
             'street_number' => $this->payment->address->streetNumber,
             'street_complement' => $this->payment->address->streetComplement,
             'city' => $this->payment->address->city,
             'state' => $this->payment->address->state,
-            'country' => $this->countryCode[$this->payment->address->country],
+            'country' => Country::toIso($this->payment->address->country),
             'phone_number' => $this->payment->person->phoneNumber,
             'note' => $this->payment->note,
             'items' => $this->transformItems(),
@@ -85,15 +82,28 @@ class PaymentAdapter extends BaseAdapter
         $itemArray = [];
 
         foreach ($this->payment->items as $item) {
-            $itemArray[] = (object) [
+            $properties = [
                 'name' => $item->name,
                 'description' => $item->description,
                 'unit_price' => $item->unitPrice,
                 'quantity' => $item->quantity,
                 'type' => $item->type,
             ];
+
+            $itemArray[] = (object) $properties;
         }
 
         return (object) $itemArray;
+    }
+
+    private function transformMetadata()
+    {
+        $metadata = [
+            'risk' => (object) [
+                'profile_id' => $this->payment->riskProfileId
+            ]
+        ];
+
+        return (object) $metadata;
     }
 }
