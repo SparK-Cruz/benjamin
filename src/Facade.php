@@ -354,11 +354,8 @@ class Facade
         foreach ($this->getAllPublicServices() as $method => $service) {
             $class = get_class($service);
 
-            if (!defined($class.'::API_TYPE')) {
-                continue;
-            }
-
-            if ($class::API_TYPE !== $apiType) {
+            if (!defined($class.'::API_TYPE')
+                || $class::API_TYPE !== $apiType) {
                 continue;
             }
 
