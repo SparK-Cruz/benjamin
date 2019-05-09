@@ -1,4 +1,7 @@
-## 1.18.1
+## 1.18.2-tecnofit
+* PHP 7.2 compatibility
+
+## 1.18.2
 * Fix - Bug on sending UserAgent data [#155](https://github.com/ebanx/benjamin/pull/155)
 
 ## 1.18.1
