@@ -16,7 +16,7 @@ use Ebanx\Benjamin\Models\Notification;
 
 class Facade
 {
-    const VERSION="1.18.2";
+    const VERSION="1.18.2-tecnofit";
     /**
      * Mock this in your tests extending and using ClientForTests
      * and any Engine you like (we provide EchoEngine)

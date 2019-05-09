@@ -12,6 +12,8 @@ class EngineTest extends TestCase
      */
     public function testGetRequestWithoutData()
     {
+        getenv('ONLINE') || $this->markTestSkipped('Online test');
+
         $url = 'http://portquiz.net/';
         $engine = new Engine();
 
@@ -26,6 +28,8 @@ class EngineTest extends TestCase
      */
     public function testGetRequestWithData()
     {
+        getenv('ONLINE') || $this->markTestSkipped('Online test');
+
         $url = 'http://portquiz.net/';
         $data = ['hash' => 'teste'];
         $engine = new Engine();
@@ -41,6 +45,8 @@ class EngineTest extends TestCase
      */
     public function testPostRequestWithData()
     {
+        getenv('ONLINE') || $this->markTestSkipped('Online test');
+
         $url = 'http://portquiz.net/';
         $data = ['hash' => 'teste', 'key' => 'working'];
         $engine = new Engine();
@@ -53,6 +59,8 @@ class EngineTest extends TestCase
 
     public function testPostRequestWithError()
     {
+        getenv('ONLINE') || $this->markTestSkipped('Online test');
+
         $url = 'http://portquiz.net/not-found';
         $data = ['hash' => 'teste'];
         $engine = new Engine();
@@ -66,6 +74,8 @@ class EngineTest extends TestCase
 
     public function testPostRequestWithCustomUserAgentData()
     {
+        getenv('ONLINE') || $this->markTestSkipped('Online test');
+
         $url = 'http://portquiz.net/';
         $data = ['hash' => 'teste', 'key' => 'working'];
         $engine = new Engine();
@@ -78,6 +88,8 @@ class EngineTest extends TestCase
     }
     public function testMultiplePostsWithCustomUserAgentData()
     {
+        getenv('ONLINE') || $this->markTestSkipped('Online test');
+
         $url = 'http://portquiz.net/';
         $data = ['hash' => 'teste', 'key' => 'working'];
         $engine = new Engine();
