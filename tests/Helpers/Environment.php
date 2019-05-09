@@ -9,7 +9,7 @@ class Environment
 
     public function __construct()
     {
-        (new Dotenv(__DIR__.'/../../'))->load();
+        Dotenv::create(__DIR__.'/../../')->load();
     }
 
     /**

@@ -12,12 +12,12 @@ class EngineTest extends TestCase
      */
     public function testGetRequestWithoutData()
     {
-        $url = 'http://portquiz.net';
+        $url = 'http://portquiz.net/';
         $engine = new Engine();
 
         $response = $engine->get($url);
 
-        $this->assertContains('You have reached this page on port <b>80</b>', $response->getContents());
+        $this->assertStringContainsString('You have reached this page on port <b>80</b>', $response->getContents());
         $this->assertEquals('http://portquiz.net/', $engine->getInfo()['url']);
     }
 
@@ -26,13 +26,13 @@ class EngineTest extends TestCase
      */
     public function testGetRequestWithData()
     {
-        $url = 'http://portquiz.net';
+        $url = 'http://portquiz.net/';
         $data = ['hash' => 'teste'];
         $engine = new Engine();
 
         $response = $engine->get($url, $data);
 
-        $this->assertContains('You have reached this page on port <b>80</b>', $response->getContents());
+        $this->assertStringContainsString('You have reached this page on port <b>80</b>', $response->getContents());
         $this->assertEquals('http://portquiz.net/?hash=teste', $engine->getInfo()['url']);
     }
 
@@ -41,13 +41,13 @@ class EngineTest extends TestCase
      */
     public function testPostRequestWithData()
     {
-        $url = 'http://portquiz.net';
+        $url = 'http://portquiz.net/';
         $data = ['hash' => 'teste', 'key' => 'working'];
         $engine = new Engine();
 
         $response = $engine->post($url, $data);
 
-        $this->assertContains('You have reached this page on port <b>80</b>', $response->getContents());
+        $this->assertStringContainsString('You have reached this page on port <b>80</b>', $response->getContents());
         $this->assertEquals('http://portquiz.net/', $engine->getInfo()['url']);
     }
 
@@ -66,19 +66,19 @@ class EngineTest extends TestCase
 
     public function testPostRequestWithCustomUserAgentData()
     {
-        $url = 'http://portquiz.net';
+        $url = 'http://portquiz.net/';
         $data = ['hash' => 'teste', 'key' => 'working'];
         $engine = new Engine();
         $engine->addUserAgentInfo('test_user_value');
 
         $response = $engine->post($url, $data);
-        $this->assertContains('You have reached this page on port <b>80</b>', $response->getContents());
+        $this->assertStringContainsString('You have reached this page on port <b>80</b>', $response->getContents());
         $this->assertEquals('http://portquiz.net/', $engine->getInfo()['url']);
         $this->assertEquals('["X-Ebanx-Client-User-Agent: SDK-PHP\/'. Facade::VERSION . ' test_user_value"]', json_encode($response->getFormattedUserAgentInfo()));
     }
     public function testMultiplePostsWithCustomUserAgentData()
     {
-        $url = 'http://portquiz.net';
+        $url = 'http://portquiz.net/';
         $data = ['hash' => 'teste', 'key' => 'working'];
         $engine = new Engine();
         $engine->addUserAgentInfo('test_user_value');
@@ -86,7 +86,7 @@ class EngineTest extends TestCase
         $engine->post($url, $data);
         $engine->post($url, $data);
         $response = $engine->post($url, $data);
-        $this->assertContains('You have reached this page on port <b>80</b>', $response->getContents());
+        $this->assertStringContainsString('You have reached this page on port <b>80</b>', $response->getContents());
         $this->assertEquals('http://portquiz.net/', $engine->getInfo()['url']);
         $this->assertEquals('["X-Ebanx-Client-User-Agent: SDK-PHP\/'. Facade::VERSION . ' test_user_value"]', json_encode($response->getFormattedUserAgentInfo()));
     }

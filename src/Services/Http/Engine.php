@@ -19,10 +19,12 @@ class Engine
      * @var array;
      */
     private $userAgentInfo = [];
+
     /**
      * @var string;
      */
     private $formattedUserAgentInfo = '';
+
     /**
      * @param String $method
      * @param String $url

@@ -2,31 +2,15 @@
 
 namespace Ebanx\Benjamin\Models;
 
-class Notification
+class Notification extends BaseModel
 {
-    private $operation;
-    private $notification_type;
-    private $hash_codes;
+    const OPERATION_STATUS_CHANGE = 'payment_status_change';
 
-    public function __construct($operation, $notification_type, $hash_codes)
-    {
-        $this->operation = $operation;
-        $this->notification_type = $notification_type;
-        $this->hash_codes = $hash_codes;
-    }
+    const NOTIFICATION_TYPE_UPDATE = 'update';
+    const NOTIFICATION_TYPE_REFUND = 'refund';
+    const NOTIFICATION_TYPE_CHARGEBACK = 'chargeback';
 
-    public function getOperation()
-    {
-        return $this->operation;
-    }
-
-    public function getNotificationType()
-    {
-        return $this->notification_type;
-    }
-
-    public function getHashCodes()
-    {
-        return $this->hash_codes;
-    }
+    public $operation;
+    public $type;
+    public $hashCodes = [];
 }

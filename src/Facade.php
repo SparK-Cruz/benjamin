@@ -11,6 +11,8 @@ use Ebanx\Benjamin\Services\PaymentInfo;
 use Ebanx\Benjamin\Services\Exchange;
 use Ebanx\Benjamin\Services\Refund;
 use Ebanx\Benjamin\Services\Http\Client as HttpClient;
+use Ebanx\Benjamin\Services\Notification as NotificationService;
+use Ebanx\Benjamin\Models\Notification;
 
 class Facade
 {
@@ -349,9 +351,17 @@ class Facade
         return new CancelPayment($this->config, $this->getHttpClient());
     }
 
-    public function setSource($service, $version)
+    /**
+     * @return Notification
+     */
+    public function notification(Notification $notification = null)
     {
-        $this->getHttpClient()->addUserAgentInfo($service . '/' . $version);
+        $service = new NotificationService();
+        if (is_null($notification)) {
+            return $service;
+        }
+
+        return $service->isValid($notification);
     }
 
     protected function getHttpClient()

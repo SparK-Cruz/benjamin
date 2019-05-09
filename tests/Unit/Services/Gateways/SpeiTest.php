@@ -78,7 +78,7 @@ class SpeiTest extends GatewayTestCase
     {
         $gateway = $this->getTestGateway($this->getMockedClient('<html></html>'));
         // TODO: assert something better
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<html',
             $gateway->getTicketHtml('5a53bc54679dbc1f3baf868e9d5d257ee7367fd5c47983fc')
         );

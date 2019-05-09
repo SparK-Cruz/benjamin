@@ -67,20 +67,20 @@ class FacadeTest extends TestCase
     /**
      * @param Facade $ebanx
      * @depends testMainObject
-     * @expectedException \InvalidArgumentException
      */
     public function testCreatePaymentWithoutPaymentType($ebanx)
     {
+        $this->expectException(\InvalidArgumentException::class);
         $ebanx->create(new Payment());
     }
 
     /**
      * @param Facade $ebanx
      * @depends testMainObject
-     * @expectedException \InvalidArgumentException
      */
     public function testCreatePaymentWithWrongPaymentType($ebanx)
     {
+        $this->expectException(\InvalidArgumentException::class);
         $ebanx->create(new Payment([
             'type' => 'invalidType',
         ]));
@@ -180,11 +180,10 @@ class FacadeTest extends TestCase
         $this->assertFalse($subject);
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testCheckPublicKeyWithOtherWrongResponse()
     {
+        $this->expectException(\Exception::class);
+
         $integrationKey = 'invalidKey';
         $publicKeyUrl = 'ws/merchantIntegrationProperties/isValidPublicIntegrationKey';
 
@@ -277,9 +276,7 @@ class FacadeTest extends TestCase
             $printUrl => "<html>$hash</html>",
         ]);
 
-        $source = 'test_user_data';
-        $version = 'version';
-        $ebanx->setSource($source, $version);
+        $ebanx->getHttpClient()->addUserAgentInfo('test_user_data/version');
 
         $this->assertEquals(
             json_encode($ebanx->getHttpClient()->getUserAgentInfo()),
