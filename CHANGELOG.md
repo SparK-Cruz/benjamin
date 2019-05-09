@@ -1,3 +1,33 @@
+## 1.18.1
+* Fix - Bug on sending UserAgent data [#155](https://github.com/ebanx/benjamin/pull/155)
+
+## 1.18.1
+* Fix - Add Chargeback action to Http Processing [#153](https://github.com/ebanx/benjamin/pull/153)
+
+## 1.18.0
+* Feature - Add util to validate a API notification about update and refund [#151](https://github.com/ebanx/benjamin/pull/151)
+
+## 1.17.3
+* Fix - Fix User Agent source tag [#149](https://github.com/ebanx/benjamin/pull/149)
+
+## 1.17.2
+* Fix - Fix array format passed to Curl as Header [#147](https://github.com/ebanx/benjamin/pull/147)
+
+## 1.17.1
+* Fix - Add Facade method to submit Source/Version data [#145](https://github.com/ebanx/benjamin/pull/145)
+
+## 1.17.0
+* Feature - Add User Agent Data with version data to every HTTP request [#143](https://github.com/ebanx/benjamin/pull/143)
+
+## 1.16.0
+* Feature - Add BankTransfer as a payment method [#141](https://github.com/ebanx/benjamin/pull/141)
+
+## 1.15.1
+* Fix - Use customer config to get instalments [#140](https://github.com/ebanx/benjamin/pull/140)
+
+## 1.15.0
+* Feature - Add function that return instalments by country [#139](https://github.com/ebanx/benjamin/pull/139)
+
 ## 1.14.0
 * Feature - Change APIs URL to increase performance [138](https://github.com/ebanx/benjamin/pull/138)
 
